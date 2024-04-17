@@ -1,13 +1,8 @@
 package com.alibou.security.user;
 
 import com.alibou.security.token.Token;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,28 +18,75 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_user")
+@Table(name = "_user",
+        uniqueConstraints = {@UniqueConstraint(name = "user_email_unique",columnNames = "adresse_email")})
+
 public class User implements UserDetails {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id",
+          updatable = true,
+          nullable = false)
   private Integer id;
-  private String firstname;
-  private String lastname;
+  @Column(name = "nom",
+          nullable = false)
+  private String  nom;
+  @Column(name = "adresse_domicile",
+          nullable = false)
+  private String adresseDomicile;
+  @Column(name = "ville",
+          nullable = false)
+  private String ville;
+  @Column(name = "province")
+  private String province;
+  @Column(name = "code_postal",
+          nullable = false)
+  private String codePostal;
+  @Column(name = "numero_de_cellulaire",
+          nullable = false)
+  private Long numeroDeCellulaire;
+  @Column(name = "adresse_email",
+          nullable = false
+  )
   private String email;
+
+  @Column(name = "mot_de_passe",
+          nullable = false
+  )
   private String password;
 
-  @Enumerated(EnumType.STRING)
-  private Role role;
+
+  @Column(name = "role"
+
+  )
+  private String roleUser;
+  @Column(name = "genre")
+  private String  genre;
+
+  //@Enumerated(EnumType.STRING)
+
+ // private Role role;
+
+
 
   @OneToMany(mappedBy = "user")
   private List<Token> tokens;
 
+//  @Override
+//  public Collection<? extends GrantedAuthority> getAuthorities() {
+//    return role.getAuthorities();
+//  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return role.getAuthorities();
+    return null;
   }
 
+  //  @Override
+//  public Collection<? extends GrantedAuthority> getAuthorities() {
+//    return List.of(new SimpleGrantedAuthority(role));
+//  }
   @Override
   public String getPassword() {
     return password;

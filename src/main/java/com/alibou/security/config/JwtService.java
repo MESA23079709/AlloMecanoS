@@ -35,11 +35,14 @@ public class JwtService {
   }
 
   public String generateToken(UserDetails userDetails) {
-    return generateToken(new HashMap<>(), userDetails);
+    HashMap<String , String > userDt =new HashMap<>();
+
+    userDt.put("role","client");
+    return generateToken(userDt, userDetails);
   }
 
   public String generateToken(
-      Map<String, Object> extraClaims,
+      Map<String, String> extraClaims,
       UserDetails userDetails
   ) {
     return buildToken(extraClaims, userDetails, jwtExpiration);
@@ -52,7 +55,7 @@ public class JwtService {
   }
 
   private String buildToken(
-          Map<String, Object> extraClaims,
+          Map<String, String> extraClaims,
           UserDetails userDetails,
           long expiration
   ) {
